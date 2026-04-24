@@ -10,3 +10,26 @@ Spring Boot project to build a secure backend system with AI-based financial sug
 ## Status
 - Project initialized
 - DB connected
+
+
+Built a secure Spring Boot microservice implementing JWT-based authentication and 
+resolved real-world security and API integration challenges.
+
+Day-2
+## 🔐 Authentication & Security
+
+- Implemented stateless authentication using JWT
+- Created custom login API: `/auth/login`
+- Disabled default Spring Security login and configured custom security rules
+
+## 🛠️ Challenges Solved
+
+- Fixed 403 Forbidden error caused by CSRF protection
+- Resolved JSON mapping issue (null username)
+- Handled JWT weak key exception by upgrading to secure key (256-bit+)
+
+## 📌 Learnings
+
+- Understanding of Spring Security filter chain
+- JWT token generation and security standards
+- Debugging real-world backend issues
