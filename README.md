@@ -33,3 +33,27 @@ Day-2
 - Understanding of Spring Security filter chain
 - JWT token generation and security standards
 - Debugging real-world backend issues
+
+## 🔐 Secured APIs with JWT
+
+### Authentication Flow
+1. User logs in via `/auth/login`
+2. Server returns JWT token
+3. Client sends token in header:
+   Authorization: Bearer <token>
+
+### Protected Endpoint
+- `/expenses` → requires valid JWT
+
+### Security Features
+- Stateless authentication
+- Custom JWT filter
+- Token validation on each request
+
+### Example
+
+###without token
+→ 403 Forbidden
+
+#### With token
+→ Access granted
