@@ -33,3 +33,42 @@ Day-2
 - Understanding of Spring Security filter chain
 - JWT token generation and security standards
 - Debugging real-world backend issues
+
+## 🔐 Secured APIs with JWT
+
+### Authentication Flow
+1. User logs in via `/auth/login`
+2. Server returns JWT token
+3. Client sends token in header:
+   Authorization: Bearer <token>
+
+### Protected Endpoint
+- `/expenses` → requires valid JWT
+
+### Security Features
+- Stateless authentication
+- Custom JWT filter
+- Token validation on each request
+
+### Example
+
+###without token
+→ 403 Forbidden
+
+#### With token
+→ Access granted
+
+
+## 📬 Postman Collection
+
+You can test all APIs using the Postman collection:
+
+Location:
+docs/postman-collection/Secure AI Expense Advisor APIs.postman_collection.json
+
+Steps:
+1. Import into Postman
+2. Run Login API
+3. Copy token
+4. Set token in collection variable
+5. Test secured APIs

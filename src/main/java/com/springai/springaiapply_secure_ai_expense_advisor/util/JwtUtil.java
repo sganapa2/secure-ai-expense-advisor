@@ -27,4 +27,13 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String extractUsername(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(LibGeneratedSecuredKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
 }
