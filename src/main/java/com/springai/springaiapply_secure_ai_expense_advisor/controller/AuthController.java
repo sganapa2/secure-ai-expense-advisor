@@ -1,5 +1,6 @@
 package com.springai.springaiapply_secure_ai_expense_advisor.controller;
 
+import com.springai.springaiapply_secure_ai_expense_advisor.dto.AuthRequest;
 import com.springai.springaiapply_secure_ai_expense_advisor.entitiy.User;
 import com.springai.springaiapply_secure_ai_expense_advisor.service.UserService;
 import com.springai.springaiapply_secure_ai_expense_advisor.util.JwtUtil;
@@ -35,7 +36,16 @@ public class AuthController {
         return jwtUtil.generateToken(user.getUsername());
     }
 
+    @PostMapping("/signup")
+    public String signup(@RequestBody AuthRequest request) {
 
+        User user = userService.registerNewUser(
+                request.getUsername(),
+                request.getPassword()
+        );
+
+        return "User registered successfully: " + user.getUsername();
+    }
     /**
      * @deprecated This method is obsolete and should not be used.
      * Use {@link #login(User)} instead for proper user validation.
