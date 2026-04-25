@@ -72,3 +72,14 @@ Steps:
 3. Copy token
 4. Set token in collection variable
 5. Test secured APIs
+
+## ✅ Features
+- JWT-based authentication
+- Expense & Investment tracking
+- Monthly financial reports
+- Category-based filtering
+- Rule-based insights
+- Integration tests (MockMvc)
+
+## 🧪 Run Tests
+./gradlew test
