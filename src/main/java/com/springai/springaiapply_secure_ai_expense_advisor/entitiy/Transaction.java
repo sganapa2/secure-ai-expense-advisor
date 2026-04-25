@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "expenses")
-public class Expense {
+@Table(name = "transactions")
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,12 @@ public class Expense {
     private String title;
     private Double amount;
 
-    private String username; // owner of expense
+    @Enumerated(EnumType.STRING)
+    private TransactionType type; // EXPENSE / INVESTMENT
+
+    private String category; // Food, Travel, SIP, FD
+
+    private String username;
 
     private LocalDate date;
 
