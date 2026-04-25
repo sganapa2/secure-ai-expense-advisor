@@ -1,0 +1,28 @@
+package com.springai.springaiapply_secure_ai_expense_advisor.service;
+
+import com.springai.springaiapply_secure_ai_expense_advisor.entitiy.User;
+import com.springai.springaiapply_secure_ai_expense_advisor.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public User validateUser(String username, String password) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        return user;
+    }
+}
