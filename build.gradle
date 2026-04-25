@@ -18,7 +18,8 @@ repositories {
 }
 
 ext {
-	set('springAiVersion', "2.0.0-M4")
+	set('springAiVersion', "1.0.0")
+	/*set('springAiVersion', "2.0.0-M4")*/
 }
 
 dependencies {
@@ -26,10 +27,9 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-/*
+	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springframework.ai:spring-ai-starter-model-openai'
-*/
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
