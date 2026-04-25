@@ -25,4 +25,17 @@ public class UserService {
 
         return user;
     }
+
+    public User registerNewUser(String username, String password) {
+
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+
+        return userRepository.save(user);
+    }
 }
