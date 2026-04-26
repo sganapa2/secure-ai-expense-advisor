@@ -86,3 +86,15 @@ button:hover {
   color: blue;
   font-weight: bold;
 }
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card button {
+  background: #007bff;
+}
+
+.card button:hover {
+  background: #0056b3;
+}
