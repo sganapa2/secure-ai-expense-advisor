@@ -2,7 +2,8 @@ package com.springai.springaiapply_secure_ai_expense_advisor.controller;
 
 import com.springai.springaiapply_secure_ai_expense_advisor.entitiy.Transaction;
 import com.springai.springaiapply_secure_ai_expense_advisor.entitiy.TransactionType;
-import com.springai.springaiapply_secure_ai_expense_advisor.repository.TransactionRepository;
+import com.springai.springaiapply_secure_ai_expense_advisor.service.TransactionService;
+import com.springai.springaiapply_secure_ai_expense_advisor.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ import java.util.Map;
 public class TransactionController {
 
     @Autowired
-    private TransactionRepository repo;
+    private TransactionService transactionService;
 
     // 📊 Monthly Report
     @GetMapping("/monthly-report")
@@ -33,7 +34,7 @@ public class TransactionController {
         LocalDate end = yearMonth.atEndOfMonth();
 
         List<Transaction> list =
-                repo.findByUsernameAndDateBetween(principal.getName(), start, end);
+                transactionService.findByUsernameAndDateBetween(principal.getName(), start, end);
 
         double expense = list.stream()
                 .filter(t -> t.getType() == TransactionType.EXPENSE)
@@ -44,10 +45,15 @@ public class TransactionController {
                 .filter(t -> t.getType() == TransactionType.INVESTMENT)
                 .mapToDouble(Transaction::getAmount)
                 .sum();
+        double income = list.stream()
+                .filter(t -> t.getType() == TransactionType.INCOME)
+                .mapToDouble(Transaction::getAmount)
+                .sum();
 
         Map<String, Double> result = new HashMap<>();
         result.put("totalExpense", expense);
         result.put("totalInvestment", investment);
+        result.put("totalIncome", income);
 
         return result;
     }
@@ -58,7 +64,7 @@ public class TransactionController {
             @RequestParam String category,
             Principal principal) {
 
-        return repo.findByUsernameAndTypeAndCategory(
+        return transactionService.findByUsernameAndTypeAndCategory(
                 principal.getName(),
                 type,
                 category
@@ -69,17 +75,32 @@ public class TransactionController {
     @PostMapping
     public Transaction add(@RequestBody Transaction t, Principal principal) {
         t.setUsername(principal.getName());
+        t.setTitle(t.getDescription()); // Set title same as description for simplicity
         t.setDate(LocalDate.now());
-        return repo.save(t);
+        return transactionService.save(t);
     }
 
     // 📄 Get by type (Expense / Investment)
-    @GetMapping
-    public List<Transaction> getByType(
-            @RequestParam TransactionType type,
-            Principal principal) {
-
-        return repo.findByUsernameAndType(principal.getName(), type);
+    // 🔍 Filter by type
+    @GetMapping("/type/{type}")
+    public List<Transaction> getByType(@PathVariable TransactionType type) {
+        String username = SecurityUtil.getCurrentUsername();
+        return transactionService.getByType(username, type);
     }
+
+    // 📄 Get all
+    @GetMapping
+    public List<Transaction> getAll() {
+        String username = SecurityUtil.getCurrentUsername();
+        return transactionService.getAll(username);
+    }
+
+     // 🗑️ Delete transaction
+     @DeleteMapping("/{id}")
+     public String delete(@PathVariable Long id) {
+         String username = SecurityUtil.getCurrentUsername();
+         transactionService.delete(id, username);
+         return "Transaction with id " + id + "Deleted";
+     }
 
 }

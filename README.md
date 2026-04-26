@@ -83,3 +83,33 @@ Steps:
 
 ## 🧪 Run Tests
 ./gradlew test
+
+## ✅ Features Implemented
+
+- User Authentication (JWT based)
+- Add / View / Delete Transactions
+- User-specific data isolation
+- Transaction Types:
+   - INCOME
+   - EXPENSE
+   - INVESTMENT
+- Dynamic Category Dropdown (based on Type)
+- Validation for clean financial data
+- Analytics Dashboard:
+   - Total Income
+   - Total Expense
+   - Savings Calculation
+
+## ⚙️ Tech Stack
+
+Backend:
+- Spring Boot
+- Spring Security (JWT)
+- JPA / Hibernate
+
+Frontend:
+- React.js
+- Axios
+
+Database:
+- H2

@@ -31,5 +31,6 @@ public class Transaction {
     private String username;
 
     private LocalDate date;
+    private String description; // transaction remarks/comments
 
 }
