@@ -38,7 +38,7 @@ public class TransactionFlowTest {
 
     @BeforeEach
     void setup() {
-        when(aIFinancialAdvisorService.generateInsights(anyDouble(), anyDouble()))
+        when(aIFinancialAdvisorService.generateInsights(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
                 .thenReturn("Test AI response");
     }
 

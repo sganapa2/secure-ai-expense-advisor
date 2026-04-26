@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/insights")
@@ -26,7 +27,12 @@ public class InsightsController {
     @GetMapping
     public InsightResponse getInsights(Principal principal) {
 
-        List<Transaction> list = repo.findAll();
+        List<Transaction> list = repo.findByUsername(principal.getName());
+
+        double income = list.stream()
+                .filter(t -> t.getType() == TransactionType.INCOME)
+                .mapToDouble(Transaction::getAmount)
+                .sum();
 
         double expense = list.stream()
                 .filter(t -> t.getUsername().equals(principal.getName()))
@@ -39,9 +45,14 @@ public class InsightsController {
                 .filter(t -> t.getType() == TransactionType.INVESTMENT)
                 .mapToDouble(Transaction::getAmount)
                 .sum();
+        double savings = income - expense;
+        String aiAdvice = aiService.generateInsights(income, expense, investment, savings);
 
-        String aiAdvice = aiService.generateInsights(expense, investment);
-
-        return new InsightResponse(aiAdvice, null);
+        return new InsightResponse(aiAdvice, Map.of(
+                "income", income,
+                "expense", expense,
+                "investment", investment,
+                "savings", savings
+        ));
     }
 }

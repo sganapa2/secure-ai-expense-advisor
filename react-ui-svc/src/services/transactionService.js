@@ -17,3 +17,7 @@ export const deleteTransaction = (id) => {
 export const getSummary = () => {
   return api.get("/analytics/summary");
 };
+
+export const getInsights = () => {
+  return api.get("/analytics/insights");
+};

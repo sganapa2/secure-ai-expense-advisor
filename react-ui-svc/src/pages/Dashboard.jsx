@@ -3,9 +3,12 @@ import TransactionForm from "../components/TransactionForm";
 import { getTransactions } from "../services/transactionService";
 import TransactionList from "../components/TransactionList";
 import { getSummary } from "../services/transactionService";
+import { getInsights } from "../services/transactionService";
 
 export default function Dashboard() {
 
+    const [insight, setInsight] = useState("");
+    const [loadingInsight, setLoadingInsight] = useState(false);
   const [transactions, setTransactions] = useState([]);
 
   const loadTransactions = async () => {
@@ -29,6 +32,20 @@ const loadSummary = async () => {
   setSummary(res.data);
 };
 
+const loadInsights = async () => {
+  try {
+    setLoadingInsight(true);
+    const res = await getInsights();
+    setInsight(res.data.advice || res.data);
+
+  } catch (err) {
+    console.error(err);
+    setInsight("Failed to load AI advice");
+  } finally {
+    setLoadingInsight(false);
+  }
+};
+
   const [filter, setFilter] = useState("ALL");
 
   const filteredTransactions = transactions.filter((t) => {
@@ -44,6 +61,7 @@ const refreshAll = () => {
     useEffect(() => {
       loadTransactions();
        loadSummary();
+       loadInsights(); // 🔥 auto load AI insights on dashboard load
     }, []);
 
   return (
@@ -67,6 +85,17 @@ const refreshAll = () => {
         </div>
 
       </div>
+      <div><div className="card">
+             <h3>🧠 AI Advisor</h3>
+
+             <button onClick={loadInsights}>
+               {loadingInsight ? "Analyzing..." : "Get AI Advice"}
+             </button>
+
+             <div style={{ marginTop: 10 }}>
+               {insight && <p>{insight}</p>}
+             </div>
+           </div></div>
 
       {/* Form */}
       <TransactionForm onSuccess={refreshAll} />

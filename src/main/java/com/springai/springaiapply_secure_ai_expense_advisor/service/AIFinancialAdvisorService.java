@@ -1,6 +1,5 @@
 package com.springai.springaiapply_secure_ai_expense_advisor.service;
 
-import com.springai.springaiapply_secure_ai_expense_advisor.controller.AuthController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
@@ -17,24 +16,29 @@ public class AIFinancialAdvisorService {
         this.chatClient = builder.build();
     }
 
-    public String generateInsights(double expense, double investment) {
-
-
-
-        return getFinancialAdvice(expense, investment);
-
-
+    public String generateInsights(double income, double expense, double investment, double savings) {
+        return getFinancialAdvice(income, expense, investment, savings);
     }
-    public String getFinancialAdvice(double expense, double investment) {
+
+    public String getFinancialAdvice(double income, double expense, double investment, double savings) {
         String prompt = """
-                You are a financial advisor.
+                You are a smart financial advisor.
                 
-                User data:
-                - Total Expense: %f
-                - Total Investment: %f
+                User financial summary:
+                - Income: %f
+                - Expense: %f
+                - Investment: %f
                 
-                Give short, practical financial advice in 2-3 lines.
-                """.formatted(expense, investment);
+                Notes:
+                - Investment is part of savings (not expense)
+                
+                Analyze and give:
+                1. Spending behavior
+                2. Savings quality
+                3. Investment advice
+                
+                Keep response short (2-3 lines), practical and realistic.
+                """.formatted(income, expense, investment);
         try {
             return chatClient.prompt()
                     .user(prompt)
@@ -42,15 +46,26 @@ public class AIFinancialAdvisorService {
                     .content();
         } catch (Exception ex) {
             logger.error("AI service failed generating financial advice: {} Hence trying with custom approach.", ex.getMessage());
-            return fallbackAdvice(expense, investment);
+            return fallbackAdvice(income, expense, investment, savings);
         }
     }
 
-    private String fallbackAdvice(double expense, double investment) {
-        if (expense > investment) {
-            return "⚠️ Your expenses are higher than investments. Try saving more. Custom advice not AI generated.";
-        } else {
-            return "✅ Great! You are investing well. Customized analysis not AI generated response.";
+    private String fallbackAdvice(double income, double expense, double investment, double savings) {
+
+        if (income == 0) {
+            return "⚠️ No income recorded. Add income to get insights.";
         }
+
+        double expenseRatio = (expense / income) * 100;
+
+        if (expenseRatio > 70) {
+            return "⚠️ High spending. Try reducing expenses.";
+        }
+
+        if (savings < income * 0.2) {
+            return "⚠️ Low savings. Aim to save at least 20%.";
+        }
+
+        return "✅ Good financial balance. Keep investing consistently.";
     }
 }

@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/analytics/**").authenticated()
                         .requestMatchers("/auth/**", "/h2-console/**").permitAll()  // ✅ allow H2
                         .requestMatchers("/auth/login", "/auth/signup").permitAll()   // 👈 allow these EXACT endpoints
                         .anyRequest().authenticated()
