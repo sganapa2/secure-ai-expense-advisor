@@ -32,5 +32,10 @@ public class Transaction {
 
     private LocalDate date;
     private String description; // transaction remarks/comments
+    
+    // Investment-specific fields
+    private LocalDate maturityDate; // For FD, RBI Bonds, RD, etc.
+    private String investmentInstitute; // Bank or financial institute name
+    private String investmentPlatform; // App/Platform name: KITE, GROWW, COIN, etc.
 
 }

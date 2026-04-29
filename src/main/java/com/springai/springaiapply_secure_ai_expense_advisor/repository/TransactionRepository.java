@@ -21,4 +21,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByUsername(String username);
 
     Optional<Transaction> findByIdAndUsername(Long id, String username);
+
+    List<Transaction> findByMaturityDateBetween(LocalDate startDate, LocalDate endDate);
 }

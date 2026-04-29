@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/analytics/**").authenticated()
+                        .requestMatchers("/api/**").authenticated()  // ✅ allow authenticated API access
                         .requestMatchers("/auth/**", "/h2-console/**").permitAll()  // ✅ allow H2
                         .requestMatchers("/auth/login", "/auth/signup").permitAll()   // 👈 allow these EXACT endpoints
                         .anyRequest().authenticated()
