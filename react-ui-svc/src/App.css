@@ -1,38 +1,232 @@
-.App {
-  text-align: center;
+/* 🎨 Color Variables */
+:root {
+  --primary-color: #28a745;
+  --success-color: #d4edda;
+  --danger-color: #f8d7da;
+  --info-color: #d1ecf1;
+  --light-bg: #f5f5f5;
+  --card-bg: #f8f9fa;
+  --text-dark: #333;
+  --text-muted: #555;
+  --border-radius: 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Dashboard Container */
+.dashboard-container {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+/* Top summary cards */
+.summary-container {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card {
+  padding: 15px 20px;
+  border-radius: var(--border-radius);
+  font-weight: bold;
+  flex: 1;
+  min-width: 150px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.income {
+  background-color: var(--success-color);
+  color: #155724;
+}
+
+.expense {
+  background-color: var(--danger-color);
+  color: #721c24;
+}
+
+.savings {
+  background-color: var(--info-color);
+  color: #004085;
+}
+
+/* Middle section (AI + Form side-by-side) */
+.middle-section {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  min-height: 200px;
+  flex-wrap: wrap;
+}
+
+.ai-box,
+.form-box {
+  flex: 1;
+  min-width: 250px;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  background: var(--light-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+/* Bottom table */
+.table-container {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  background: var(--light-bg);
+  border-radius: var(--border-radius);
+  padding: 10px;
+}
+
+/* Report controls */
+.report-controls {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.report-controls select,
+.report-controls button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.report-controls select {
+  background: white;
+  cursor: pointer;
+}
+
+.report-controls select:focus,
+.report-controls button:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.report-controls button {
+  background: var(--primary-color);
   color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.report-controls button:hover {
+  background: #218838;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.report-controls button:active {
+  transform: scale(0.98);
+}
+
+/* Report card */
+.report-card {
+  background: var(--card-bg);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-top: 10px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.report-grid-item {
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #eee;
+}
+
+.report-extra {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.report-message {
+  margin-top: 10px;
+  font-weight: bold;
+  color: var(--primary-color);
+  padding: 8px;
+  background: #f0f9f5;
+  border-radius: 5px;
+}
+
+.report-message.error {
+  color: #dc3545;
+  background: #fff5f5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 8px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .middle-section {
+    flex-direction: column;
+    min-height: auto;
   }
+
+  .ai-box,
+  .form-box {
+    min-width: 100%;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .report-controls select,
+  .report-controls button {
+    width: 100%;
+  }
+}
+
+/* Utility Classes */
+button {
+  transition: all 0.2s ease;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

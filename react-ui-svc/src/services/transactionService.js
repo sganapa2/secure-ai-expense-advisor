@@ -21,3 +21,20 @@ export const getSummary = () => {
 export const getInsights = () => {
   return api.get("/analytics/insights");
 };
+
+export const getMonthlyReport = async (year, month, token) => {
+  const response = await fetch(
+    `http://localhost:8080/reports/monthly?year=${year}&month=${month}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch report");
+  }
+
+  return await response.json();
+};

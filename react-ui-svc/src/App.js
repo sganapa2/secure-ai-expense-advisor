@@ -16,8 +16,6 @@ function App() {
 
       setToken(res.data);
       localStorage.setItem("token", res.data);
-
-      alert("Login successful");
     } catch (err) {
       console.error(err);
       alert("Login failed");
