@@ -161,6 +161,10 @@ export default function Dashboard() {
             <div className="card savings">
               🏦 Savings<br />₹{summary.savings}
             </div>
+
+            <div className="card investment">
+                📊 Investment <br /> ₹{summary.investment}
+              </div>
           </div>
 
           {/* Middle Section: Transaction Form + List */}

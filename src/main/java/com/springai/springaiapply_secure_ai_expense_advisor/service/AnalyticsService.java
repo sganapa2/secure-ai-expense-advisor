@@ -25,9 +25,9 @@ public class AnalyticsService {
 
         for (Transaction t : txs) {
             switch (t.getType()) {
-                case INCOME -> income += t.getAmount();
-                case EXPENSE -> expense += t.getAmount();
-                case INVESTMENT -> investment += t.getAmount();
+                case INCOME -> income += t.getAmount().doubleValue();
+                case EXPENSE -> expense += t.getAmount().doubleValue();
+                case INVESTMENT -> investment += t.getAmount().doubleValue();
             }
         }
 
@@ -35,7 +35,7 @@ public class AnalyticsService {
         result.put("income", income);
         result.put("expense", expense);
         result.put("investment", investment);
-        result.put("savings", income - expense - investment);
+        result.put("savings", income - expense);
 
         return result;
     }

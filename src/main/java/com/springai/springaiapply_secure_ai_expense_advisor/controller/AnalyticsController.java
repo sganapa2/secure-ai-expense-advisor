@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -39,24 +40,23 @@ public class AnalyticsController {
     public InsightResponse getInsights(Principal principal) {
 
         List<Transaction> list = repo.findByUsername(principal.getName());
-
-        double income = list.stream()
+        BigDecimal income = list.stream()
                 .filter(t -> t.getType() == TransactionType.INCOME)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        double expense = list.stream()
+        BigDecimal expense = list.stream()
                 .filter(t -> t.getUsername().equals(principal.getName()))
                 .filter(t -> t.getType() == TransactionType.EXPENSE)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        double investment = list.stream()
+        BigDecimal investment = list.stream()
                 .filter(t -> t.getUsername().equals(principal.getName()))
                 .filter(t -> t.getType() == TransactionType.INVESTMENT)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-        double savings = income - expense;
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal savings = income.subtract(expense).subtract(investment);
         String aiAdvice = aiService.generateInsights(income, expense, investment, savings);
 
         return new InsightResponse(aiAdvice, Map.of(

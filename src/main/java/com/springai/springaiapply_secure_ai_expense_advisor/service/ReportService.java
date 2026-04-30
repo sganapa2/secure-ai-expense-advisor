@@ -50,13 +50,13 @@ public class ReportService {
         for (Transaction t : transactions) {
             switch (t.getType()) {
                 case INCOME:
-                    income += t.getAmount();
+                    income += t.getAmount().doubleValue();
                     break;
                 case EXPENSE:
-                    expense += t.getAmount();
+                    expense += t.getAmount().doubleValue();
                     break;
                 case INVESTMENT:
-                    investment += t.getAmount();
+                    investment += t.getAmount().doubleValue();
                     break;
             }
         }
@@ -65,7 +65,7 @@ public class ReportService {
     }
 
     private static MonthlyReportResponse getMonthlyReportResponse(double income, double expense, double investment) {
-        double savings = income - expense;
+        double savings = income - expense - investment;
 
         double expenseRatio = income == 0 ? 0 : (expense / income) * 100;
         double savingsRate = income == 0 ? 0 : (savings / income) * 100;
@@ -88,31 +88,5 @@ public class ReportService {
             response.setMessage("✅ Healthy financial month");
         }
         return response;
-    }
-
-    /*
-     * @deprecated - This is a simple summary report method used in early stages. It fetches all transactions and
-     *  then filters in memory which is inefficient. Use getMonthlyReport instead.
-     */
-    @Deprecated
-    public Map<String, Double> getSimpleSummaryReport(Principal principal) {
-        List<Transaction> all = transactionRepository.findAll();
-
-        double expense = all.stream()
-                .filter(t -> t.getUsername().equals(principal.getName()))
-                .filter(t -> t.getType() == TransactionType.EXPENSE)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-
-        double investment = all.stream()
-                .filter(t -> t.getUsername().equals(principal.getName()))
-                .filter(t -> t.getType() == TransactionType.INVESTMENT)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-
-        return Map.of(
-                "totalExpense", expense,
-                "totalInvestment", investment
-        );
     }
 }

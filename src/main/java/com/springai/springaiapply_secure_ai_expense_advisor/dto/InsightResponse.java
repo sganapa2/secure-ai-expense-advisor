@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Data
@@ -15,5 +16,5 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InsightResponse {
     private String advice;
-    private Map<String, Double> warning;
+    private Map<String, BigDecimal> warning;
 }

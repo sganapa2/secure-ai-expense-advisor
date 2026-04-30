@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Service
 public class AIFinancialAdvisorService {
 
@@ -16,11 +19,11 @@ public class AIFinancialAdvisorService {
         this.chatClient = builder.build();
     }
 
-    public String generateInsights(double income, double expense, double investment, double savings) {
+    public String generateInsights(BigDecimal income, BigDecimal expense, BigDecimal investment, BigDecimal savings) {
         return getFinancialAdvice(income, expense, investment, savings);
     }
 
-    public String getFinancialAdvice(double income, double expense, double investment, double savings) {
+    public String getFinancialAdvice(BigDecimal income, BigDecimal expense, BigDecimal investment, BigDecimal savings) {
         String prompt = """
                 You are a smart financial advisor.
                 
@@ -50,19 +53,19 @@ public class AIFinancialAdvisorService {
         }
     }
 
-    private String fallbackAdvice(double income, double expense, double investment, double savings) {
+    private String fallbackAdvice(BigDecimal income, BigDecimal expense, BigDecimal investment, BigDecimal savings) {
 
-        if (income == 0) {
+        if (income.compareTo(BigDecimal.ZERO) == 0) {
             return "⚠️ No income recorded. Add income to get insights.";
         }
 
-        double expenseRatio = (expense / income) * 100;
+        BigDecimal expenseRatio = (expense.divide(income, 2, RoundingMode.HALF_UP)).multiply(BigDecimal.valueOf(100));
 
-        if (expenseRatio > 70) {
+        if (expenseRatio.compareTo(new BigDecimal("70")) > 0) {
             return "⚠️ High spending. Try reducing expenses.";
         }
 
-        if (savings < income * 0.2) {
+        if (savings.compareTo(income.multiply(BigDecimal.valueOf(0.2))) < 0) {
             return "⚠️ Low savings. Aim to save at least 20%.";
         }
 
