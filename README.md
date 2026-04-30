@@ -171,3 +171,59 @@ spring.mail.properties.mail.smtp.starttls.required=true
 - This endpoint is primarily for **development and debugging**
 - Can be **disabled or removed** in production builds
 - Helps troubleshoot authentication issues during development
+
+
+## 🐘 PostgreSQL Database Setup
+
+### Initialize PostgreSQL
+1. Open command prompt and navigate to PostgreSQL bin folder
+2. **Initialize data directory**:
+   ```powershell
+   pg_ctl -D ..\data initdb -l logfile
+   ```
+3. **Start PostgreSQL service**:
+   ```powershell
+   pg_ctl -D ..\data -l logfile start
+   ```
+4. **Stop PostgreSQL service**:
+   ```powershell
+   pg_ctl -D ..\data stop
+   ```
+
+### Create Database & User
+1. **Connect to PostgreSQL**:
+   ```powershell
+   psql -U postgres
+   ```
+2. **Create user (if role doesn't exist)**:
+   ```sql
+   CREATE USER postgres WITH PASSWORD 'password' CREATEDB;
+   ```
+3. **Create database**:
+   ```sql
+   CREATE DATABASE expense_db OWNER postgres;
+   ```
+4. **Exit**:
+   ```sql
+   \q
+   ```
+
+### Troubleshooting
+
+#### Error: "FATAL: role 'postgres' does not exist"
+- **Solution 1**: Create the postgres role using pgAdmin or psql
+- **Solution 2**: Use a different username in `application.properties`:
+  ```properties
+  spring.datasource.username=your_existing_username
+  spring.datasource.password=your_password
+  ```
+- **Solution 3**: Use H2 in-memory database for development (comment out PostgreSQL properties)
+
+#### Connection refused
+- Verify PostgreSQL is running: `pg_ctl -D ..\data status`
+- Check if port 5432 is correct in connection string
+- Verify credentials are correct
+
+#### Database doesn't exist
+- Create it: `CREATE DATABASE expense_db;`
+- Or update application.properties with correct database name

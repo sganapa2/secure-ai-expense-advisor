@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/reports")
@@ -33,9 +32,4 @@ public class ReportController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public Map<String, Double> getReport(Principal principal) {
-
-        return reportService.getSimpleSummaryReport(principal);
-    }
 }

@@ -7,6 +7,7 @@ import com.springai.springaiapply_secure_ai_expense_advisor.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -23,7 +24,7 @@ public class TransactionController {
 
     // 📊 Monthly Report
     @GetMapping("/monthly-report")
-    public Map<String, Double> getMonthlyReport(
+    public Map<String, BigDecimal> getMonthlyReport(
             @RequestParam int year,
             @RequestParam int month,
             Principal principal) {
@@ -36,21 +37,21 @@ public class TransactionController {
         List<Transaction> list =
                 transactionService.findByUsernameAndDateBetween(principal.getName(), start, end);
 
-        double expense = list.stream()
+        BigDecimal expense = list.stream()
                 .filter(t -> t.getType() == TransactionType.EXPENSE)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        double investment = list.stream()
+        BigDecimal investment = list.stream()
                 .filter(t -> t.getType() == TransactionType.INVESTMENT)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-        double income = list.stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal income = list.stream()
                 .filter(t -> t.getType() == TransactionType.INCOME)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Map<String, Double> result = new HashMap<>();
+        Map<String, BigDecimal> result = new HashMap<>();
         result.put("totalExpense", expense);
         result.put("totalInvestment", investment);
         result.put("totalIncome", income);

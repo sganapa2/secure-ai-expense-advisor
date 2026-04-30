@@ -40,11 +40,11 @@ public class UserDataInitializer implements CommandLineRunner {
             User user = new User();
             user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("password"));
-            user.setEmail("admin@example.com"); // Default email for testing
+            user.setEmail("santoshganapa@gmail.com"); // Default email for testing
 
             userRepository.save(user);
 
-            logger.info("✅ Default user created: admin/password (email: admin@example.com)");
+            logger.info("✅ Default user created: admin/password (email: santoshganapa@gmail.com)");
         }
     }
 
@@ -59,7 +59,7 @@ public class UserDataInitializer implements CommandLineRunner {
             User user = new User();
             user.setUsername(defaultUser);
             user.setPassword(passwordEncoder.encode(defaultPassword));
-            user.setEmail(defaultUser + "@example.com"); // Default email
+            user.setEmail(defaultUser + "@gmail.com"); // Default email
             userRepository.save(user);
         }
     }
