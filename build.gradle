@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.flywaydb:flyway-core:10.0.1'
 	implementation 'org.flywaydb:flyway-database-postgresql:10.0.1'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'

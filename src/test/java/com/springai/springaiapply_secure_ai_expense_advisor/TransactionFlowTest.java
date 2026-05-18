@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,7 +40,7 @@ public class TransactionFlowTest {
 
     @BeforeEach
     void setup() {
-        when(aIFinancialAdvisorService.generateInsights(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
+        when(aIFinancialAdvisorService.generateInsights(new BigDecimal(1), new BigDecimal(1), new BigDecimal(1), new BigDecimal(1)))
                 .thenReturn("Test AI response");
     }
 

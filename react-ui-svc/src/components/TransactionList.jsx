@@ -1,10 +1,30 @@
+import { useState } from "react";
 import { deleteTransaction } from "../services/transactionService";
 
 export default function TransactionList({ transactions, onDelete }) {
+  const [deletingId, setDeletingId] = useState(null);
 
   const handleDelete = async (id) => {
-    await deleteTransaction(id);
-    onDelete(); // reload
+    if (!id) {
+      alert("Cannot delete: missing transaction id");
+      return;
+    }
+
+    const ok = window.confirm("Are you sure you want to delete this transaction?");
+    if (!ok) return;
+
+    try {
+      setDeletingId(id);
+      await deleteTransaction(id);
+      onDelete(); // reload
+    } catch (err) {
+      console.error("Delete failed:", err);
+      // show a helpful message from server if available
+      const msg = err?.response?.data || err.message || "Failed to delete transaction";
+      alert(msg);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const investmentTypesWithMaturity = ["FD", "RD", "RBI Bonds"];
@@ -13,11 +33,10 @@ export default function TransactionList({ transactions, onDelete }) {
   const isInvestmentWithPlatform = (t) => t.type === "INVESTMENT" && investmentTypesWithPlatform.includes(t.category);
 
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div style={{ width: "100%", boxSizing: "border-box" }}>
       <table className="table">
         <thead>
           <tr>
-            <th>Type</th>
             <th>Category</th>
             <th>Amount</th>
             <th>Date</th>
@@ -36,8 +55,7 @@ export default function TransactionList({ transactions, onDelete }) {
 
         <tbody>
           {transactions.map((t) => (
-            <tr key={t.id}>
-              <td className={t.type.toLowerCase()}>{t.type}</td>
+            <tr key={t.id} className={`row-${t.type.toLowerCase()}`}>
               <td>{t.category}</td>
               <td>₹{t.amount}</td>
               <td>{t.date}</td>
