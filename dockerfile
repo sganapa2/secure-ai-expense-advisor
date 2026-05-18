@@ -1,27 +1,27 @@
 # ===== BUILD STAGE =====
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
-# Copy all project files
+# Copy project files
 COPY . .
 
-# Give permission to gradlew
+# Gradle wrapper permission
 RUN chmod +x gradlew
 
-# Build Spring Boot app
+# Build app
 RUN ./gradlew clean build -x test
 
 # ===== RUN STAGE =====
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
 # Copy generated jar
 COPY --from=0 /app/build/libs/*.jar app.jar
 
-# Cloud port
+# Expose port
 EXPOSE 8080
 
-# Start application
+# Run Spring Boot app
 ENTRYPOINT ["java", "-jar", "app.jar"]
