@@ -1,6 +1,5 @@
 package com.springai.springaiapply_secure_ai_expense_advisor.security;
 
-import com.springai.springaiapply_secure_ai_expense_advisor.service.AIFinancialAdvisorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +37,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").authenticated()  // ✅ allow authenticated API access
                         .requestMatchers("/auth/**", "/h2-console/**").permitAll()  // ✅ allow H2
                         .requestMatchers("/auth/login", "/auth/signup").permitAll()   // 👈 allow these EXACT endpoints
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+                        .requestMatchers(
+                                "/liabilities",
+                                "/liabilities/**",
+                                "/transactions/**",
+                                "/report/**"
+                        ).authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers

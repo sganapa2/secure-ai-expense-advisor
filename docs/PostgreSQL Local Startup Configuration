@@ -1,0 +1,146 @@
+# PostgreSQL Local Startup Configuration (Windows + IntelliJ)
+
+This setup helps automatically start the local PostgreSQL database instance before running the Spring Boot application in IntelliJ IDEA.
+
+---
+
+# PostgreSQL Startup Command
+
+```powershell
+.\pg_ctl.exe -D ..\data -l logfile start
+```
+
+---
+
+# Command Explanation
+
+| Part           | Meaning                                                    |
+| -------------- | ---------------------------------------------------------- |
+| `.\pg_ctl.exe` | Executes PostgreSQL control utility from current directory |
+| `-D ..\data`   | Specifies PostgreSQL data directory                        |
+| `-l logfile`   | Writes startup logs into `logfile`                         |
+| `start`        | Starts PostgreSQL server                                   |
+
+---
+
+# Prerequisite
+
+Open terminal inside:
+
+```text
+C:\installations\postgreSQL\pgsql\bin
+```
+
+or configure IntelliJ Working Directory accordingly.
+
+---
+
+# IntelliJ IDEA Configuration
+
+## Create Shell Script Run Configuration
+
+### Steps
+
+1. Open:
+   Run → Edit Configurations
+
+2. Add New Configuration:
+   Shell Script
+
+3. Configure:
+
+### Name
+
+```text
+StartPostgreSQLDBInstance
+```
+
+### Script Text
+
+```powershell
+.\pg_ctl.exe -D ..\data -l logfile start
+```
+
+### Working Directory
+
+```text
+C:\installations\postgreSQL\pgsql\bin
+```
+
+4. Enable:
+
+* Execute in terminal
+
+5. Save configuration.
+
+---
+
+# Optional: Configure Before Launch
+
+To automatically start PostgreSQL before Spring Boot application starts:
+
+1. Open Spring Boot Run Configuration
+2. Go to:
+   Before Launch
+3. Click:
+   +
+4. Select:
+   Run Another Configuration
+5. Choose:
+   StartPostgreSQLDBInstance
+
+Now PostgreSQL starts automatically before backend startup.
+
+---
+
+# Verify PostgreSQL Running
+
+Check port:
+
+```powershell
+netstat -ano | findstr 5432
+```
+
+Or test connection:
+
+```powershell
+psql -U postgres
+```
+
+---
+
+# Common Issue
+
+## Error
+
+```text
+pg_ctl is not recognized
+```
+
+## Cause
+
+PowerShell does not execute commands from current directory automatically.
+
+## Solution
+
+Use:
+
+```powershell
+.\pg_ctl.exe
+```
+
+instead of:
+
+```powershell
+pg_ctl.exe
+```
+
+---
+
+# Benefit
+
+This setup avoids:
+
+* Spring Boot startup failures
+* Forgetting to start PostgreSQL manually
+* Local development interruptions
