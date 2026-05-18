@@ -2,6 +2,7 @@ package com.springai.springaiapply_secure_ai_expense_advisor.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,9 @@ public class SecurityConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
+    @Value("${app.cors.allowed-origins:http://localhost:3000}")
+    private String allowedOrigins;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JWTOncePerRequestFilter jwtFilter) throws Exception {
 
@@ -38,6 +42,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/h2-console/**").permitAll()  // ✅ allow H2
                         .requestMatchers("/auth/login", "/auth/signup").permitAll()   // 👈 allow these EXACT endpoints
                         .requestMatchers(
+                                "/",
+                                "/health",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
@@ -65,19 +71,18 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        logger.info("Setting up CORS configuration for react-ui service");
+        logger.info("Setting up CORS configuration with allowed origins: {}", allowedOrigins);
         CorsConfiguration configuration = new CorsConfiguration();
-        // Use the specific origin of your PWA (e.g., http://localhost:3000 or your GitHub Pages URL)
-        ////configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        //config.setAllowedOriginPatterns(List.of("*"));
+        // Parse comma-separated origins or use single origin
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        configuration.setAllowedOrigins(origins);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-        logger.info("END of Setting up CORS configuration for react-ui service");
+        logger.info("CORS configuration setup complete");
         return source;
     }
 

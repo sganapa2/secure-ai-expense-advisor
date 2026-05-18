@@ -1,15 +1,10 @@
 import api from "../api/api";
 
-import axios from 'axios';
-
 export const createLiability = async (liabilityData) => {
-    const token = localStorage.getItem('token');
-
-    // Ensure liabilityData is a plain JS Object: { name: '...', amount: 0 }
-    return await axios.post('http://localhost:8080/liabilities', liabilityData, {
+    // Use the centralized API client which has JWT interceptor and dynamic baseURL
+    return await api.post('/liabilities', liabilityData, {
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json' // Explicitly enforce JSON
+            'Content-Type': 'application/json'
         }
     });
 };
