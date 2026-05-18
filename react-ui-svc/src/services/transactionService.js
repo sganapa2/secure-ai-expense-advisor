@@ -23,8 +23,9 @@ export const getInsights = () => {
 };
 
 export const getMonthlyReport = async (year, month, token) => {
+  const apiBaseURL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
   const response = await fetch(
-    `http://localhost:8080/reports/monthly?year=${year}&month=${month}`,
+    `${apiBaseURL}/reports/monthly?year=${year}&month=${month}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

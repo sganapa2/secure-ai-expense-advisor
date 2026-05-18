@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { getTransactions } from "../services/transactionService";
+import api from "../api/api";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
 
 export default function UserProfile() {
   const [email, setEmail] = useState("");
@@ -14,7 +17,7 @@ export default function UserProfile() {
   const loadProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/api/user/profile", {
+      const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -37,7 +40,7 @@ export default function UserProfile() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/api/user/profile", {
+      const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -66,7 +69,7 @@ export default function UserProfile() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/api/user/test-email", {
+      const response = await fetch(`${API_BASE_URL}/api/user/test-email`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -100,7 +103,7 @@ export default function UserProfile() {
         return;
       }
 
-      const response = await fetch("http://localhost:8080/api/user/debug/auth", {
+      const response = await fetch(`${API_BASE_URL}/api/user/debug/auth`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
