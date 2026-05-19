@@ -51,7 +51,8 @@ public class SecurityConfig {
                                 "/liabilities",
                                 "/liabilities/**",
                                 "/transactions/**",
-                                "/report/**"
+                                "/report/**",
+                                "/reports/**"
                         ).authenticated()
 
                         .anyRequest().authenticated()
