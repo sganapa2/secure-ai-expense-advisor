@@ -41,10 +41,11 @@ public class AuthController {
 
         User user = userService.registerNewUser(
                 request.getUsername(),
-                request.getPassword()
+                request.getPassword(),
+                request.getEmail()
         );
 
-        return "User registered successfully: " + user.getUsername();
+        return jwtUtil.generateToken(user.getUsername());
     }
     /**
      * @deprecated This method is obsolete and should not be used.
