@@ -73,16 +73,21 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         logger.info("Setting up CORS configuration with allowed origins: {}", allowedOrigins);
         CorsConfiguration configuration = new CorsConfiguration();
-        // Parse comma-separated origins or use single origin
-        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        // Parse comma-separated origins and trim whitespace
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .toList();
+        logger.info("Parsed CORS origins: {}", origins);
         configuration.setAllowedOrigins(origins);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-        logger.info("CORS configuration setup complete");
+        logger.info("CORS configuration setup complete with {} origins", origins.size());
         return source;
     }
 
